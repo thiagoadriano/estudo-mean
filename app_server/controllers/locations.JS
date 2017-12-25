@@ -1,13 +1,13 @@
 function homeList(req, res) {
-    res.render('index', { title: 'Home' });
+    res.render('locations/list', { title: 'Home' });
 }
 
 function locationInfo(req, res) {
-    res.render('index', { title: 'Location Info' });
+    res.render('locations/detail', { title: 'Location Info' });
 }
 
 function addReview(req, res) {
-    res.render('index', { title: 'Add Review' });
+    res.render('locations/review-form', { title: 'Add Review' });
 }
 
 
