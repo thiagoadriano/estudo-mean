@@ -10,6 +10,7 @@ block content
           small &nbsp;#{pageHeader.strapline}
   .row
     .col-xs-12.col-sm-8
+      .error= message
       .row.list-group
         
         each location in locations
@@ -25,7 +26,7 @@ block content
             p
               each facility in location.facilities
                 span.label.label-warning= facility
-                &nbsp;
+                  &nbsp;
                       
     .col-xs-12.col-sm-4
       p.lead= sidebar

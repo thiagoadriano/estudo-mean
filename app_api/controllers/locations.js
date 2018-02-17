@@ -16,7 +16,7 @@ function locationsListByDistance(req, res) {
             coordinates: [lng, lat]
         };
 
-        if(!lng || !lat) {
+        if((!lng && lng !== 0) || (!lat && lat !== 0)) {
             util.sendJsonResponse(res, 404, {
                 message: 'lng and lat queryparameters are required'
             });

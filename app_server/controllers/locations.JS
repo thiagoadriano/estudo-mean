@@ -1,4 +1,23 @@
-function homeList(req, res) {
+let request = require('request'),
+    util = require('../../app_api/helpers/util')
+    apiOptions = {
+        server: "http://localhost:3000"
+    };
+
+if(process.env.NODE_ENV === 'production'){
+    apiOptions.server = 'https://stormy-mountain-12262.herokuapp.com/';
+}
+
+function _renderHomePage(req, res, responseBody){
+    var message;
+    if(!(responseBody instanceof Array)) {
+        message = "API lookup error";
+        responseBody = [];
+    } else {
+        if(!responseBody.length) {
+            message = "No places found nearby";
+        }
+    }
     res.render('locations/list', { 
         title: 'Loc8r - find a place to work with to wifi',
         pageHeader: {
@@ -6,30 +25,33 @@ function homeList(req, res) {
             strapline: 'Find places to work with wifi near you!'
         },
         sidebar: 'Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a pint? Let Loc8r help you find the place you\'re looking for.',
-        locations: [
-            {
-                name: 'Starcups',
-                address: '125 High Street, Reading, RG6 1PS',
-                rating: 3,
-                facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-                distance: '100m'
-            },
-            {
-                name: 'Cafe Hero',
-                address: '125 High Street, Reading, RG6 1PS',
-                rating: 4,
-                facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-                distance: '200m'
-            },
-            {
-                name: 'Burger Queen',
-                address: '125 High Street, Reading, RG6 1PS',
-                rating: 2,
-                facilities: ['Food', 'Premium wifi'],
-                distance: '250m'
-            }
-        ]
+        locations: responseBody,
+        message: message
     });
+}
+
+function homeList(req, res) {
+    let path = '/api/locations',
+        requestOpetions = {
+            url: apiOptions.server + path,
+            method: 'GET',
+            json: {},
+            qs: {
+                lng: -0.9669851,
+                lat: 51.473029
+            } 
+        };
+    request(requestOpetions, (err, response, body) => {
+        var i, data;
+        data = body;
+        if(response.statusCode === 200 && data.length) {
+            for(i = 0; i < data.length; i++) {
+                data[i].distance = util.formatDistance(data[i].distance);
+            }
+        }
+        _renderHomePage(req, res, data);
+    });
+
 }
 
 function locationInfo(req, res) {
