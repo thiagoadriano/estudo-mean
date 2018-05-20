@@ -49,14 +49,14 @@ function _doAddReview(req, res, location) {
             } else {
                 _updateAvarageRating(location._id);
                 thisreview = location.reviews[location.reviews.length - 1];
-                util.sendJsonResponse(res, 401, thisreview);
+                util.sendJsonResponse(res, 201, thisreview);
             }
         });
     }
 }
 
 function reviewsCreate(req, res) {
-    var location = req.params.locationid;
+    var locationid = req.params.locationid;
     if(locationid){
         locModel
             .findById(locationid)
